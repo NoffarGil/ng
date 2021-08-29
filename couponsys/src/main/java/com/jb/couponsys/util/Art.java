@@ -40,5 +40,6 @@ public class Art {
             " ║║║╣ ║  ║╣  ║ ║╣ \n" +
             "═╩╝╚═╝╩═╝╚═╝ ╩ ╚═╝";
 
+    public static final String ADMIN = "admin test";
 
 }

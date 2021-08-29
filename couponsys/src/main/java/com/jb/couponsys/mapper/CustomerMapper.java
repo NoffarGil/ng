@@ -8,7 +8,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.Optional;
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface CustomerMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)

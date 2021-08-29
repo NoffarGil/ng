@@ -52,7 +52,6 @@ public class Bootstrap implements CommandLineRunner {
         companyRepository.saveAll(Arrays.asList(colaComp,neviotComp,isrotelComp));
         companyRepository.findAll().forEach(System.out::println);
         System.out.println(Art.INSERT);
-        //System.out.println("insert");
         Company comp4 = Company.builder()
                 .name("Comp4")
                 .email("comp@gmail.com")
@@ -123,7 +122,5 @@ public class Bootstrap implements CommandLineRunner {
                 .build();
         couponRepository.saveAll(Arrays.asList(coupon1, coupon2));
         couponRepository.findAll().forEach(System.out::println);
-
-
     }
 }

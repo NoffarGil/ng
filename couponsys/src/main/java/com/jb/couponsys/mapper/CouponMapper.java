@@ -10,9 +10,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.util.Optional;
 
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface CouponMapper {
 
-    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)
-    void updateCouponFromDto(Coupon couponDto, @MappingTarget Optional<Coupon> entity);
+/*    @BeanMapping(nullValuePropertyMappingStrategy =  NullValuePropertyMappingStrategy.IGNORE)
+    void updateCouponFromDto(Coupon couponDto, @MappingTarget Optional<Coupon> entity);*/
 }

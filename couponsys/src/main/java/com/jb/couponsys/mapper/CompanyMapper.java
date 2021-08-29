@@ -1,7 +1,6 @@
 package com.jb.couponsys.mapper;
 
 import com.jb.couponsys.beans.Company;
-import com.jb.couponsys.beans.Customer;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

@@ -6,12 +6,14 @@ import com.jb.couponsys.beans.Company;
 import com.jb.couponsys.beans.Coupon;
 import com.jb.couponsys.execption.CouponSystemException;
 import com.jb.couponsys.execption.ErrMsg;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 //@Scope(Prototype)
 public class CompanyServiceImple extends ClientService implements CompanyService{
 
@@ -44,7 +46,7 @@ public class CompanyServiceImple extends ClientService implements CompanyService
         }
 
         Optional<Coupon> couponToUpdate = couponRepository.findById(couponId);
-        this.couponMapper.updateCouponFromDto(coupon, couponToUpdate);
+        //this.couponMapper.updateCouponFromDto(coupon, couponToUpdate);
         this.couponRepository.saveAndFlush(couponToUpdate.get());
     }
 

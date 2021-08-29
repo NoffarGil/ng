@@ -4,12 +4,15 @@ import com.jb.couponsys.beans.Company;
 import com.jb.couponsys.beans.Customer;
 import com.jb.couponsys.execption.CouponSystemException;
 import com.jb.couponsys.execption.ErrMsg;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class AdminServiceImpl extends ClientService implements AdminService{
     @Override
     public void addCompany(Company company) throws CouponSystemException {
@@ -33,19 +36,18 @@ public class AdminServiceImpl extends ClientService implements AdminService{
         if(!this.companyRepository.getById(companyId).getName().equals(company.getName())){
             throw new CouponSystemException(ErrMsg.CAN_NOT_UPDATE_COMPANY_NAME);
         }
-
+        // patch
         Optional<Company> companyToUpdate = companyRepository.findById(companyId);
         this.companyMapper.updateCompanyFromDto(company, companyToUpdate);
-        this.companyRepository.saveAndFlush(companyToUpdate.get());
+        // put
+        // this.companyRepository.saveAndFlush(company);
     }
 
     @Override
     public void deleteCompany(int companyId) throws CouponSystemException {
-        Company companyToDelete = this.companyRepository.getById(companyId);
-        if (companyToDelete == null){
-            throw new CouponSystemException(ErrMsg.COMPANY_NOT_EXIST);
-        }
-        this.companyRepository.deleteById(companyId);
+        Company companyToDelete = this.companyRepository
+                .findById(companyId).orElseThrow(()-> new CouponSystemException(ErrMsg.COMPANY_NOT_EXIST));
+        this.companyRepository.deleteById(companyToDelete.getId());
     }
 
     @Override
@@ -55,9 +57,10 @@ public class AdminServiceImpl extends ClientService implements AdminService{
 
     @Override
     public Company getSingleCompany(int companyId) throws CouponSystemException {
-        if(!this.companyRepository.existsById(companyId)){
+        this.companyRepository.findById(companyId).orElseThrow(()-> new CouponSystemException(ErrMsg.COMPANY_ID_NOT_EXIST));
+        /*if(!this.companyRepository.existsById(companyId)){
             throw new CouponSystemException(ErrMsg.COMPANY_ID_NOT_EXIST);
-        }
+        }*/
         return this.companyRepository.getById(companyId);
     }
 
@@ -74,18 +77,11 @@ public class AdminServiceImpl extends ClientService implements AdminService{
         if(!this.customerRepository.existsById(customerId)){
             throw new CouponSystemException(ErrMsg.CUSTOMER_ID_NOT_EXIST);
         }
+        //patch
         Optional<Customer> customerToUpdate = customerRepository.findById(customerId);
         this.customerMapper.updateCustomerFromDto(customer, customerToUpdate);
-        this.customerRepository.saveAndFlush(customerToUpdate.get());
-    }
-
-    @Override
-    public void deleteCustomer(int customerId) throws CouponSystemException {
-        Customer customerToDelete = this.customerRepository.getById(customerId);
-        if (customerToDelete == null){
-            throw new CouponSystemException(ErrMsg.CUSTOMER_NOT_EXIST);
-        }
-        this.companyRepository.deleteById(customerId);
+        // put
+        //this.customerRepository.saveAndFlush(customerToUpdate.get());
     }
 
     @Override
@@ -104,5 +100,15 @@ public class AdminServiceImpl extends ClientService implements AdminService{
     @Override
     public boolean login(String email, String password) {
         return email.equals("admin@admin.com") && password.equals("admin");
+    }
+
+    @Override
+    public void deleteCustomer(int customerId) throws CouponSystemException {
+        this.customerRepository
+                .findById(customerId)
+                .orElseThrow(()->new CouponSystemException(ErrMsg.CUSTOMER_NOT_EXIST));
+        this.customerRepository.getById(customerId).getCoupons()
+                .forEach(coupon -> this.couponRepository.deleteCustomerCouponByCustomerIdAndCouponId(customerId, coupon.getId()));
+        this.companyRepository.deleteById(customerId);
     }
 }
